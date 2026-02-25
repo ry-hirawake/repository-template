@@ -1,23 +1,17 @@
 ---
 name: codex-system
-description: |
-  PROACTIVELY consult Codex CLI, your highly capable supporter with exceptional
-  reasoning and task completion abilities. Codex is a trusted expert you should
-  ALWAYS consult BEFORE making decisions on: design choices, implementation
-  approaches, debugging strategies, refactoring plans, or any non-trivial problem.
-  When uncertain, consult Codex. Don't hesitate - Codex provides better analysis.
-  Explicit triggers: "think deeper", "analyze", "second opinion", "consult codex".
+description: Codex CLIに積極的にご相談ください。Codexは、卓越した推論力とタスク遂行能力を備えた、頼りになるサポーターです。Codexは信頼できる専門家です。設計の選択、実装アプローチ、デバッグ戦略、リファクタリング計画、その他重要な問題について決定を下す前に、必ずご相談ください。不明な点があれば、Codexにご相談ください。迷う必要はありません。Codexはより優れた分析を提供します。明確なトリガー：「さらに深く考える」、「分析する」、「セカンドオピニオン」、「Codexに相談する」
 metadata:
   short-description: Claude Code ↔ Codex CLI collaboration
 ---
 
-# Codex System — Deep Reasoning Partner
+# Codex システム — 深層推論のパートナー
 
-**Codex CLI (gpt-5.2-codex) is your highly capable supporter for deep reasoning tasks.**
+**Codex CLI (gpt-5.3-codex) は、深層推論タスクをサポートする優れたツールです。**
 
 > **詳細ルール**: `.claude/rules/codex-delegation.md`
 
-## Context Management (CRITICAL)
+## コンテキスト管理（重要）
 
 **サブエージェント経由を推奨。** メインオーケストレーターのコンテキストを節約するため。
 
@@ -27,124 +21,124 @@ metadata:
 | デバッグ分析 | サブエージェント経由（推奨） |
 | 短い質問 (1-2文回答) | 直接呼び出しOK |
 
-## When to Consult (MUST)
+## いつ相談するか（必須）
 
-| Situation | Trigger Examples |
+| 状況 | トリガー例 |
 |-----------|------------------|
-| **Design decisions** | 「どう設計？」「アーキテクチャ」 / "How to design?" |
-| **Debugging** | 「なぜ動かない？」「エラー」 / "Debug" "Error" |
-| **Trade-off analysis** | 「どちらがいい？」「比較して」 / "Compare" "Which?" |
-| **Complex implementation** | 「実装方法」「どう作る？」 / "How to implement?" |
-| **Refactoring** | 「リファクタ」「シンプルに」 / "Refactor" "Simplify" |
-| **Code review** | 「レビューして」「確認して」 / "Review" "Check" |
+| **設計の決定** | 「どう設計？」「アーキテクチャ」 / "How to design?" |
+| **デバッグ** | 「なぜ動かない？」「エラー」 / "Debug" "Error" |
+| **トレードオフ分析** | 「どちらがいい？」「比較して」 / "Compare" "Which?" |
+| **複雑な実装** | 「実装方法」「どう作る？」 / "How to implement?" |
+| **リファクタリング** | 「リファクタ」「シンプルに」 / "Refactor" "Simplify" |
+| **コードレビュー** | 「レビューして」「確認して」 / "Review" "Check" |
 
-## When NOT to Consult
+## 相談しない場合
 
-- Simple file edits, typo fixes
-- Following explicit user instructions
-- git commit, running tests, linting
-- Tasks with obvious single solutions
+- 簡単なファイル編集、タイプミス修正
+- 明示的なユーザー指示に従う場合
+- git commit、テスト実行、linting
+- 明らかに単一の解決策があるタスク
 
-## How to Consult
+## 相談方法
 
-### Recommended: Subagent Pattern
+### 推奨: サブエージェントパターン
 
-**Use Task tool with `subagent_type='general-purpose'` to preserve main context.**
+**メインコンテキストを保持するために、`subagent_type='general-purpose'` を使用してください。**
 
 ```
-Task tool parameters:
+タスクツールパラメータ:
 - subagent_type: "general-purpose"
-- run_in_background: true (optional, for parallel work)
+- run_in_background: true (オプション、並列処理用)
 - prompt: |
-    Consult Codex about: {topic}
+    Codex に問い合わせる: {topic}
 
-    codex exec --model gpt-5.2-codex --sandbox read-only --full-auto "
-    {question for Codex}
+    codex exec --model gpt-5.3-codex --sandbox read-only --full-auto "
+    {Codex への質問}
     " 2>/dev/null
 
-    Return CONCISE summary (key recommendation + rationale).
+    簡潔な要約 (主要な推奨事項 + 根拠) を返します。
 ```
 
-### Direct Call (Short Questions Only)
+### 直接呼び出し（短い質問のみ）
 
-For quick questions expecting 1-2 sentence answers:
+1～2 文の回答が求められる簡単な質問の場合:
 
 ```bash
-codex exec --model gpt-5.2-codex --sandbox read-only --full-auto "Brief question" 2>/dev/null
+codex exec --model gpt-5.3-codex --sandbox read-only --full-auto "簡単な質問" 2>/dev/null
 ```
 
-### Workflow (Subagent)
+### ワークフロー (サブエージェント)
 
-1. **Spawn subagent** with Codex consultation prompt
-2. **Continue your work** → Subagent runs in parallel
-3. **Receive summary** → Subagent returns concise insights
+1. **サブエージェントを生成** (Codex の問い合わせプロンプト付き)
+2. **作業を続行** → サブエージェントが並行して実行
+3. **サマリーを受信** → サブエージェントが簡潔なインサイトを返す
 
 ### Sandbox Modes
 
 | Mode | Use Case |
 |------|----------|
-| `read-only` | Analysis, review, debugging advice |
-| `workspace-write` | Implementation, refactoring, fixes |
+| `read-only` | 分析、レビュー、デバッグに関するアドバイス |
+| `workspace-write` | 実装、リファクタリング、修正 |
 
-## Language Protocol
+## 言語プロトコル
 
-1. Ask Codex in **English**
-2. Receive response in **English**
-3. Execute based on advice (or let Codex execute)
-4. Report to user in **Japanese**
+1. Codex に **英語** で質問する
+2. **英語** で回答を受け取る
+3. アドバイスに基づいて実行する（または Codex に実行させる）
+4. ユーザーに **日本語** で報告する
 
-## Task Templates
+## タスクテンプレート
 
-### Design Review
+### 設計レビュー
 
 ```bash
-codex exec --model gpt-5.2-codex --sandbox read-only --full-auto "
-Review this design approach for: {feature}
+codex exec --model gpt-5.3-codex --sandbox read-only --full-auto "
+この設計アプローチを次の点についてレビューしてください: {機能}
 
-Context:
-{relevant code or architecture}
+コンテキスト:
+{関連コードまたはアーキテクチャ}
 
-Evaluate:
-1. Is this approach sound?
-2. Alternative approaches?
-3. Potential issues?
-4. Recommendations?
+評価:
+1. このアプローチは適切ですか?
+2. 代替アプローチはありますか?
+3. 潜在的な問題はありますか?
+4. 推奨事項はありますか?
 " 2>/dev/null
 ```
 
-### Debug Analysis
+### デバッグ分析
 
 ```bash
-codex exec --model gpt-5.2-codex --sandbox read-only --full-auto "
-Debug this issue:
+codex exec --model gpt-5.3-codex --sandbox read-only --full-auto "
+この問題をデバッグしてください:
 
-Error: {error message}
-Code: {relevant code}
-Context: {what was happening}
+エラー: {エラーメッセージ}
+コード: {関連コード}
+コンテキスト: {発生していた事象}
 
-Analyze root cause and suggest fixes.
+根本原因を分析し、修正を提案してください。
 " 2>/dev/null
 ```
 
-### Code Review
+### コードレビュー
 
-See: `references/code-review-task.md`
+参照: `references/code-review-task.md`
 
-### Refactoring
+### リファクタリング
 
-See: `references/refactoring-task.md`
+参照: `references/refactoring-task.md`
 
-## Integration with Gemini
+## Geminiとの統合
 
 | Task | Use |
 |------|-----|
-| Need research first | Gemini → then Codex |
-| Design decision | Codex directly |
-| Library comparison | Gemini research → Codex decision |
+| 最初に調査が必要 | Gemini → 次に Codex |
+| 設計決定 | 直接 Codex |
+| ライブラリ比較 | Gemini の調査 → Codex の決定 |
 
-## Why Codex?
+## Codex を選ぶ理由
 
-- **Deep reasoning**: Complex analysis and problem-solving
-- **Code expertise**: Implementation strategies and patterns
-- **Consistency**: Same project context via `context-loader` skill
-- **Parallel work**: Background execution keeps you productive
+- **深い推論**: 複雑な分析と問題解決
+- **コードの専門知識**: 実装戦略とパターン
+- **一貫性**: `context-loader` スキルによるプロジェクトコンテキストの統一
+- **並行作業**: バックグラウンド実行で生産性を維持
