@@ -38,7 +38,7 @@ https://cloud.google.com/blog/ja/topics/developers-practitioners/introducing-gem
 2. /cmd-tech-design-init    # PRJ設計定義作成
 3. /cmd-prj-init            # PRJリポジトリ初期化
 
-### 3.3. 開発フェーズ
+### 3.3. 開発フェーズ（機能単位で繰り返し）
 1. /cmd-prj-steering        # PRJコンテキスト作成
 2. /cmd-requirement         # 要件精査
 3. /cmd-story               # Story作成
